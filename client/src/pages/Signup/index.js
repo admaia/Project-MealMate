@@ -7,7 +7,7 @@ const Signup = () => {
     const { logIn } = useContext(LoggedInUserContext);
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [initialPassword, setPassword] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
@@ -22,12 +22,13 @@ const Signup = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, email, initialPassword }),
+                body: JSON.stringify({ name, email, password }),
             });
             const data = await res.json();
+
             if (res.ok) {
-                logIn(data); 
-                navigate(`/dashboard/${data.user.name}`);
+                const loginData = await logIn({ email, password });
+                navigate(`/dashboard/${loginData.name}`);
             } else {
                 setError(data.message);
             }
@@ -45,7 +46,7 @@ const Signup = () => {
                 <Label htmlFor="name">Name</Label>
                 <Input
                     id="name"
-                    type="name"
+                    type="text"
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                     required
@@ -62,7 +63,7 @@ const Signup = () => {
                 <Input
                     id="password"
                     type="password"
-                    value={initialPassword}
+                    value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     required
                 />

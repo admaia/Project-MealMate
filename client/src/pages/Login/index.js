@@ -16,24 +16,15 @@ const Login = () => {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch('/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-            const data = await res.json();
-            console.log(data)
-            if (res.ok) {
-                logIn(data);  
-                navigate(`/dashboard/${data.user.name}`);
+            const user = await logIn({ email, password });
+            if (user && user.name) {
+                console.log(`/dashboard/${user.name}`)
+                navigate(`/dashboard/${user.name}`);
             } else {
-                setError(data.message);
+                setError('Invalid user data');
             }
         } catch (err) {
-            console.error("Error logging in:", err);
-            setError('Error logging in');
+            setError('Failed to log in. Please try again.');
         } finally {
             setLoading(false);
         }

@@ -59,6 +59,10 @@ const batchImport = async () => {
         for (let userIndex = 0; userIndex < users.length; userIndex++) {
             const user = users[userIndex];
             user._id = uuidv4();
+            const existingUser = await userCollection.findOne({ email: user.email });
+            if (existingUser) {
+                continue;
+            }
             try {
                 await createProfile(user._id);
                 const result = await userCollection.insertOne(user);
@@ -100,12 +104,18 @@ const batchImport = async () => {
                 addedDate: new Date()
             }
         ];
+        for (const meal of sampleMeals) {
+            const existingMeal = await mealCollection.findOne({ recipeId: meal.recipeId });
+            if (existingMeal) {
+                continue;
+            }
 
-        const mealResult = await mealCollection.insertMany(sampleMeals);
-        if (mealResult.acknowledged === true) {
-            console.log('Sample meals added successfully.');
-        } else {
-            console.error('Error adding sample meals.');
+            const mealResult = await mealCollection.insertOne(meal);
+            if (mealResult.acknowledged === true) {
+                console.log(`Sample meal ${meal.recipeName} added.`);
+            } else {
+                console.error(`Error adding sample meal ${meal.recipeName}.`);
+            }
         }
 
     } catch (err) {
@@ -114,6 +124,10 @@ const batchImport = async () => {
         console.log('Disconnected from MongoDB.');
         await client.close();
     }
+};
+
+module.exports = {
+    createProfile
 };
 
 batchImport();

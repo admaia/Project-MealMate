@@ -6,17 +6,23 @@ import { LoggedInUserContext } from "./contexts/LoggedInUserContext";
 
 const Header = () => {
     const { loggedInUser, logOut } = useContext(LoggedInUserContext);
-    const navigate = useNavigate(); 
-
+    const navigate = useNavigate();
+    
     const OnLogOut = () => {
         logOut();
         navigate('/');
     };
 
+    const userName = loggedInUser ? loggedInUser.name : '';
+
+    const handleProfileClick = () => {
+      navigate('/profile');
+  };
+  
     return (
         <Wrapper>
             {loggedInUser ? (
-                <NavItem to={`/dashboard/${loggedInUser.user.name}`}>Dashboard</NavItem>
+                <NavItem to={`/dashboard/${userName}`}>Dashboard</NavItem>
             ) : (
                 <NavItem to="/">MealMate</NavItem>
             )}
@@ -25,7 +31,7 @@ const Header = () => {
                     <NavItem to="/login">Log in</NavItem>
                 ) : (
                     <>
-                        <NavItem>Hello, {loggedInUser.user.name}</NavItem>
+                        <ProfileLink onClick={handleProfileClick}>Hello, {userName}</ProfileLink>
                         <LogOutButton onClick={OnLogOut}>Log out</LogOutButton>
                     </>
                 )}
@@ -58,6 +64,16 @@ const Wrapper = styled.nav`
   font-family: var(--heading-font-family);
   & div {
     margin-top: var(--base-size);
+  }
+`;
+
+const ProfileLink = styled.span`
+  margin: 0 .5rem;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  &:hover {
+    border-bottom: 1px solid white; 
   }
 `;
 

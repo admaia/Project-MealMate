@@ -4,7 +4,7 @@ const cors = require('cors');
 
 const PORT = 3000;
 
-const { signup, login, getUserDashboard, searchRecipes, addMeal, deleteMeal } = require("./handlers");
+const { signup, login, getUserDashboard, searchRecipes, addMeal, deleteMeal, getUserProfile, updateUserProfile } = require("./handlers");
 
 const app = express();
 
@@ -18,6 +18,8 @@ app.get('/dashboard/:name', getUserDashboard);
 app.get('/search', searchRecipes);
 app.post('/add', addMeal);
 app.delete('/delete/:recipeId', deleteMeal);
+app.get('/profile/:id', getUserProfile);
+app.put('/profile/update', updateUserProfile);
 
 // 404 for handling undefined routes
 app.use('*', (req, res) => {
