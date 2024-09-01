@@ -24,12 +24,10 @@ const signup = async (req, res) => {
         await client.connect();
         const db = client.db(DB);
         console.log('Connected to database');
-        
         const existingUser = await db.collection(USER_COLLECTION).findOne({ email });
         if (existingUser) {
             return res.status(400).json({ status: 400, message: 'User already exists' });
         }
-
         const cryptedPassword = await bcrypt.hash(password, 10);
         const newUserId = uuidv4();
         const result = await db.collection(USER_COLLECTION).insertOne({
@@ -38,8 +36,6 @@ const signup = async (req, res) => {
             email,
             password: cryptedPassword,
         });
-        console.log('User inserted:', result);
-
         if (result.acknowledged) {
             try {
                 await createProfile(newUserId);
@@ -47,7 +43,6 @@ const signup = async (req, res) => {
                 console.error('Error creating profile on FatSecret:', error);
             }
             const newUser = await db.collection(USER_COLLECTION).findOne({ _id: newUserId });
-            console.log('New user fetched:', newUser);
             res.status(201).json({
                 status: 201,
                 message: 'User created successfully',
@@ -70,31 +65,24 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
     const { email, password } = req.body;
-
     if (!email || !password) {
         return res.status(400).json({ status: 400, message: 'Please provide email and password.' });
     }
-
     const client = new MongoClient(MONGO_URI);
     try {
         await client.connect();
         const db = client.db(DB);
         const foundUser = await db.collection(USER_COLLECTION).findOne({ email });
-
         if (!foundUser) {
             return res.status(404).json({ status: 404, message: 'Invalid email.' });
         }
-
         if (!foundUser.password) {
             return res.status(500).json({ status: 500, message: 'No password found for this user.' });
         }
-
         const match = await bcrypt.compare(password, foundUser.password);
-
         if (!match) {
             return res.status(401).json({ status: 401, message: 'Invalid password.' });
         }
-
         try {
             await createProfile(foundUser._id);
         } catch (error) {
@@ -122,50 +110,24 @@ const getUserDashboard = async (req, res) => {
     const client = new MongoClient(MONGO_URI);
     const { name } = req.params;
     const { date } = req.query;
-
-    console.log(`Received request: name=${name}, date=${date}`);
-
-    if (!date) {
-        return res.status(400).json({ status: 400, message: 'Date is required' });
-    }
-
-    if (!req.session || !req.session.userId) {
-        return res.status(401).json({ status: 401, message: 'Not authenticated' });
-    }
-
     try {
         await client.connect();
         const db = client.db(DB);
-        const user = await db.collection(USER_COLLECTION).findOne({ _id: req.session.userId });
-
+        const user = await db.collection(USER_COLLECTION).findOne({ name: name });
         if (!user) {
-            return res.status(403).json({ status: 403, message: 'User not found' });
+            return res.status(404).json({ status: 404, message: 'User not found' });
         }
-
-        if (user.name !== name) {
-            return res.status(403).json({ status: 403, message: 'Forbidden' });
-        }
-
-        // Convert date to start and end of the day in UTC
         const startOfDay = new Date(`${date}T00:00:00Z`);
         const endOfDay = new Date(`${date}T23:59:59Z`);
-
-        console.log('Start of Day:', startOfDay.toISOString());
-        console.log('End of Day:', endOfDay.toISOString());
-
         const meals = await db.collection(MEAL_COLLECTION)
             .find({
-                userId: req.session.userId,
+                userId: user._id,
                 addedDate: { $gte: startOfDay, $lte: endOfDay }
             })
             .toArray();
-
-        console.log('Fetched meals:', meals);
-
         res.json({ meals });
     } catch (error) {
-        console.error('Error during dashboard access:', error);
-        res.status(500).json({ status: 500, message: 'Error' });
+        res.status(500).json({ status: 500, message: 'Internal server error' });
     } finally {
         await client.close();
     }
@@ -208,7 +170,6 @@ const searchRecipes = async (req, res) => {
     };
 
     params.oauth_signature = generateOAuthSignature('GET', url, params, FATSECRET_USER_SECRET);
-    console.log('params.oauth_signature', params.oauth_signature);
     try {
         const response = await axios.get(url, { params });
         const recipes = response.data.recipes?.recipe || [];
@@ -231,9 +192,8 @@ const searchRecipes = async (req, res) => {
 };
 
 const addMeal = async (req, res) => {
-    const { userId, recipeId } = req.body;
+    const { userId, recipeId, addedDate } = req.body;
     const client = new MongoClient(MONGO_URI);
-
     const url = 'https://platform.fatsecret.com/rest/server.api';
     const params = {
         method: 'recipe.get.v2',
@@ -249,18 +209,12 @@ const addMeal = async (req, res) => {
     params.oauth_signature = generateOAuthSignature('GET', url, params, FATSECRET_USER_SECRET);
 
     try {
-        // Fetch the recipe data
         const recipeResponse = await axios.get(url, { params });
-        console.log('Recipe response:', recipeResponse.data);
-
         const recipe = recipeResponse.data.recipe;
-
-        // Check if recipe data is present
         if (!recipe || !recipe.serving_sizes || !recipe.serving_sizes.serving) {
             console.error('Incomplete recipe data:', recipe);
             throw new Error('Incomplete recipe data');
         }
-
         const serving = recipe.serving_sizes.serving;
         const calories = serving.calories || 'N/A';
         const fat = serving.fat || 'N/A';
@@ -268,17 +222,6 @@ const addMeal = async (req, res) => {
         const carbohydrate = serving.carbohydrate || 'N/A';
         const imageUrl = (recipe.recipe_images && recipe.recipe_images.recipe_image && recipe.recipe_images.recipe_image[0]) || 'default-image-url';
 
-        console.log('Parsed meal data:', {
-            recipeName: recipe.recipe_name,
-            recipeDescription: recipe.recipe_description,
-            calories,
-            fat,
-            protein,
-            carbohydrate,
-            imageUrl
-        });
-
-        // Save meal data to your local database
         await client.connect();
         const db = client.db(DB);
         const collection = db.collection(MEAL_COLLECTION);
@@ -293,16 +236,14 @@ const addMeal = async (req, res) => {
             protein,
             carbohydrate,
             imageUrl,
-            addedDate: new Date()
+            addedDate: new Date(addedDate)
         };
         const result = await collection.insertOne(mealData);
-        console.log('Meal added to database:', result);
 
-        // Update user's total calorie count
         const userCollection = db.collection(USER_COLLECTION);
         await userCollection.updateOne(
             { _id: userId },
-            { $inc: { totalCalories: parseFloat(calories) } } // Adjust the field based on your schema
+            { $inc: { totalCalories: parseFloat(calories) } }
         );
 
         res.status(201).json({ status: 201, message: 'Meal added successfully', meal: mealData });
@@ -319,23 +260,19 @@ const addMeal = async (req, res) => {
 };
 
 const deleteMeal = async (req, res) => {
-    const { recipeId } = req.params;
-    if (!recipeId) {
-        return res.status(400).json({ status: 400, message: 'Recipe ID is required' });
-    }
     const client = new MongoClient(MONGO_URI);
+    const { recipeId } = req.params;
     try {
         await client.connect();
         const db = client.db(DB);
-        const result = await db.collection(MEAL_COLLECTION).deleteOne({ recipeId });
-        if (result.deletedCount === 1) {
-            res.status(200).json({ status: 200, message: 'Meal deleted successfully' });
-        } else {
-            res.status(404).json({ status: 404, message: 'Meal not found' });
+        const result = await db.collection(MEAL_COLLECTION).deleteOne({ _id: recipeId });
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ status: 404, message: 'Meal not found' });
         }
+        res.json({ status: 200, message: 'Meal deleted successfully' });
     } catch (error) {
         console.error('Error deleting meal:', error);
-        res.status(500).json({ status: 500, message: 'Error deleting meal' });
+        res.status(500).json({ status: 500, message: 'Internal server error' });
     } finally {
         await client.close();
     }
