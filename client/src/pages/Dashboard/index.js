@@ -73,6 +73,31 @@ const Dashboard = () => {
         }
     }, [loggedInUser, selectedDate]);
 
+    useEffect(() => {
+        if (searchQuery.trim() === '') {
+            setSearchResults([]);
+            return;
+        }
+
+        const handleSearch = async () => {
+            try {
+                const response = await axios.get('/search', {
+                    params: {
+                        query: searchQuery,
+                        max_results: 10,
+                        page_number: 0
+                    }
+                });
+                setSearchResults(response.data.recipes || []);
+            } catch (error) {
+                console.error('Error searching recipes:', error);
+                setSearchResults([]);
+            }
+        };
+
+        handleSearch();
+    }, [searchQuery]); 
+
     const calculateTotals = (meals) => {
         const calories = meals.reduce((sum, meal) => sum + (parseFloat(meal.calories) || 0), 0);
         const fat = meals.reduce((sum, meal) => sum + (parseFloat(meal.fat) || 0), 0);
@@ -83,23 +108,6 @@ const Dashboard = () => {
         setTotalFat(Math.round(fat));
         setTotalProtein(Math.round(protein));
         setTotalCarbohydrate(Math.round(carbohydrate));
-    };
-
-    const handleSearch = async () => {
-        try {
-            const response = await axios.get('/search', {
-                params: {
-                    query: searchQuery,
-                    max_results: 10,
-                    page_number: 2
-                }
-            });
-
-            setSearchResults(response.data.recipes || []);
-        } catch (error) {
-            console.error('Error searching recipes:', error);
-            setSearchResults([]);
-        }
     };
 
     const addMealToDashboard = (recipe) => {
@@ -155,15 +163,6 @@ const Dashboard = () => {
         <DashboardWrapper>
             <Header>Dashboard</Header>
             <Section>
-                <SearchBar>
-                    <input
-                        type="text"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        placeholder="Search recipes"
-                    />
-                    <button onClick={handleSearch}>Search</button>
-                </SearchBar>
                 <DateSelector>
                     <button onClick={() => handleDateChange('previous')}>&lt;</button>
                     <span>{selectedDate}</span>
@@ -175,6 +174,15 @@ const Dashboard = () => {
                 <h2>Total Carbohydrates: {totalCarbohydrate}g</h2>
             </Section>
             <Section>
+                <h3>Search Recipes</h3>
+                <SearchBar>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        placeholder="Search recipes"
+                    />
+                </SearchBar>
                 <h3>Search Results</h3>
                 <MealsList>
                     {searchResults.length === 0 ? (
