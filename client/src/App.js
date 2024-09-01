@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import GlobalStyles from './GlobalStyles';
 import Header from './Header';
@@ -9,9 +9,18 @@ import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import { useLoggedInUser } from './contexts/LoggedInUserContext';
 
-const PrivateRoute = ({ element, ...rest }) => {
+const PrivateRoute = ({ element }) => {
     const { loggedInUser } = useLoggedInUser();
-    return loggedInUser ? element : <Navigate to="/login" />;
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    useEffect(() => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            setIsAuthenticated(true);
+        } else {
+            setIsAuthenticated(false);
+        }
+    }, [loggedInUser]);
+    return !isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 const App = () => {

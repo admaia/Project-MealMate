@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { LoggedInUserContext } from '../../contexts/LoggedInUserContext';
+import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+
 
 const Dashboard = () => {
     const { loggedInUser } = useContext(LoggedInUserContext);
@@ -13,6 +15,7 @@ const Dashboard = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+    const [chartData, setChartData] = useState([]);
 
     useEffect(() => {
         if (loggedInUser && loggedInUser.name) {
@@ -23,11 +26,50 @@ const Dashboard = () => {
                     calculateTotals(fetchedMeals);
                 })
                 .catch(error => {
-                    console.error('Error fetching meals:', error); 
+                    console.error('Error fetching meals:', error);
                     setMeals([]);
                 });
-        } else {
-            console.warn('No logged-in user or user name not available'); 
+    
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(endDate.getDate() - 6);
+    
+            axios.get(`/dashboard/${loggedInUser.name}/range`, {
+                params: {
+                    start_date: startDate.toISOString().split('T')[0],
+                    end_date: endDate.toISOString().split('T')[0]
+                }
+            })
+            .then(res => {
+                console.log(res)
+                const fetchedMeals = res.data.meals || [];
+                const dateCaloriesMap = {};
+
+                fetchedMeals.forEach(meal => {
+                    const date = meal.addedDate.split('T')[0];
+                    const calories = parseInt(meal.calories) || 0;
+                    if (!dateCaloriesMap[date]) {
+                        dateCaloriesMap[date] = 0;
+                    }
+                    dateCaloriesMap[date] += calories;
+                });
+    
+                const data = [];
+                for (let i = 6; i >= 0; i--) {
+                    const day = new Date();
+                    day.setDate(day.getDate() - i);
+                    const dateStr = day.toISOString().split('T')[0];
+                    data.push({
+                        date: dateStr,
+                        calories: dateCaloriesMap[dateStr] || 0
+                    });
+                }
+
+                setChartData(data);
+            })
+            .catch(error => {
+                console.error('Error fetching chart data:', error);
+            });
         }
     }, [loggedInUser, selectedDate]);
 
@@ -166,6 +208,28 @@ const Dashboard = () => {
                     )}
                 </MealsList>
             </Section>
+            <Section>
+                <h3>Nutrition Overview</h3>
+                <ChartContainer>
+                    <LineChart width={600} height={300} data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
+                    <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                        <XAxis
+                            dataKey="date"
+                            tickFormatter={(date) => {
+                                const dateObj = new Date(date);
+                                dateObj.setDate(dateObj.getDate() + 1);
+                                return dateObj.getDate();
+                            }}
+                        />
+                        <YAxis 
+                            axisLine={false} 
+                            tick={false} 
+                        />
+                        <Tooltip />
+                        <Line type="monotone" dataKey="calories" stroke="#8884d8" />
+                    </LineChart>
+                </ChartContainer>
+            </Section>
         </DashboardWrapper>
     );
 };
@@ -212,4 +276,11 @@ const MealsList = styled.ul`
 
 const MealItem = styled.li`
     margin-bottom: 1rem;
+`;
+
+const ChartContainer = styled.div`
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;

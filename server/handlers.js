@@ -326,6 +326,33 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
+const getMealsByRange = async (req, res) => {
+    const client = new MongoClient(MONGO_URI);
+    const { name } = req.params;
+    const { start_date, end_date } = req.query;
+    try {
+        await client.connect();
+        const db = client.db(DB);
+        const user = await db.collection(USER_COLLECTION).findOne({ name: name });
+        if (!user) {
+            return res.status(404).json({ status: 404, message: 'User not found' });
+        }
+        const startOfDay = new Date(`${start_date}T00:00:00Z`);
+        const endOfDay = new Date(`${end_date}T23:59:59Z`);
+        const meals = await db.collection(MEAL_COLLECTION)
+            .find({
+                userId: user._id,
+                addedDate: { $gte: startOfDay, $lte: endOfDay }
+            })
+            .toArray();
+        res.json({ meals });
+    } catch (error) {
+        res.status(500).json({ status: 500, message: 'Internal server error' });
+    } finally {
+        await client.close();
+    }
+};
+
 module.exports = {
     signup,
     login,
@@ -334,5 +361,6 @@ module.exports = {
     addMeal,
     deleteMeal,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    getMealsByRange
 };
