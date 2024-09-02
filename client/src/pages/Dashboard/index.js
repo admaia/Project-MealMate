@@ -82,8 +82,8 @@ const Dashboard = () => {
                 const response = await axios.get('/search', {
                     params: {
                         query: searchQuery,
-                        max_results: 10,
-                        page_number: 0
+                        max_results: 20,
+                        page_number: 2
                     }
                 });
                 setSearchResults(response.data.recipes || []);
@@ -161,30 +161,30 @@ const Dashboard = () => {
         <DashboardWrapper>
             <DateSelector>
                 <button className='meal-button' onClick={() => handleDateChange('previous')}>&lt;</button>
-                <span>{selectedDate}</span>
+                <span>{selectedDate.slice(-2)}</span>
                 <button className='meal-button' onClick={() => handleDateChange('next')}>&gt;</button>
             </DateSelector>
             <SummarySection>
-                <MacroItem>
+                <MacroItemCal>
                     <label>Total Calories</label>
                     <span>{totalCalories} kcal</span>
-                </MacroItem>
-                <MacroItem>
+                </MacroItemCal>
+                <MacroItemFat>
                     <label>Fat</label>
                     <span>{totalFat}g</span>
-                </MacroItem>
-                <MacroItem>
+                </MacroItemFat>
+                <MacroItemPro>
                     <label>Protein</label>
                     <span>{totalProtein}g</span>
-                </MacroItem>
-                <MacroItem>
+                </MacroItemPro>
+                <MacroItemCarb>
                     <label>Carbohydrates</label>
                     <span>{totalCarbohydrate}g</span>
-                </MacroItem>
+                </MacroItemCarb>
             </SummarySection>
             <MainContentWrapper>
                 <ContentWrapper>
-                    <Section>
+                    <SectionMeals>
                         <h3>Your Meals</h3>
                         <MealsList>
                             {meals.length === 0 ? (
@@ -193,17 +193,17 @@ const Dashboard = () => {
                                 meals.map(meal => (
                                     <MealItem key={meal._id}>
                                         <h4>{meal.recipeName}</h4>
-                                        <p>{meal.calories} kcal</p>
-                                        <p>{meal.fat} g</p>
-                                        <p>{meal.protein} g</p>
-                                        <p>{meal.carbohydrate} g</p>
+                                        <p className='meal-calories'>{meal.calories} kcal</p>
+                                        <p className='meal-fat'>{meal.fat} g</p>
+                                        <p className='meal-protein'>{meal.protein} g</p>
+                                        <p className='meal-carb'>{meal.carbohydrate} g</p>
                                         <button className='meal-button' onClick={() => deleteMeal(meal._id)}>-</button>
                                     </MealItem>
                                 ))
                             )}
                         </MealsList>
-                    </Section>
-                    <ChartSection>
+                    </SectionMeals>
+                    <SectionCharts>
                         <h3>Calories Intake Overview</h3>
                         <ChartContainer>
                             <LineChart width={600} height={300} data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>
@@ -215,16 +215,17 @@ const Dashboard = () => {
                                         dateObj.setDate(dateObj.getDate() + 1);
                                         return dateObj.getDate();
                                     }}
+                                    tick={{ fontSize: 14, fontWeight: 'bold' }}
                                 />
                                 <YAxis 
                                     axisLine={false} 
                                     tick={false} 
                                 />
                                 <Tooltip />
-                                <Line type="monotone" dataKey="calories" stroke="#8884d8" />
+                                <Line type="monotone" dataKey="calories" stroke="#5fad56" />
                             </LineChart>
                         </ChartContainer>
-                    </ChartSection>
+                    </SectionCharts>
                 </ContentWrapper>
                 <Section>
                     <h3>Search Recipes</h3>
@@ -274,11 +275,44 @@ const SummarySection = styled.div`
     margin-bottom: 1rem;
 `;
 
-const MacroItem = styled.div`
-    background: rgba(255, 255, 255, 0.97);
+const MacroItemCal = styled.div`
+    background: rgba(242, 193, 78, 0.95);
     padding: 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+`;
+
+const MacroItemFat = styled.div`
+    background: rgba(247, 129, 84, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+`;
+
+const MacroItemPro = styled.div`
+    background: rgba(77, 144, 120, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+`;
+
+const MacroItemCarb = styled.div`
+    background: rgba(180, 67, 108, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     width: 150px;
     display: flex;
     flex-direction: column;
@@ -299,25 +333,34 @@ const ContentWrapper = styled.div`
     flex: 2;
 `;
 
-const ChartSection = styled.section`
-    margin-bottom: 20px;
-    background: rgba(255, 255, 255, 0.97);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 300px;
-`;
-
 const Section = styled.section`
     background: rgba(255, 255, 255, 0.97);
     padding: 2.5rem;
     border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
     flex: 1;
+    overflow: auto;
+    margin-bottom: 20px;
+    width: 800px; 
+    max-height: 840px;
+`;
+
+const SectionMeals = styled.section`
+    background: rgba(255, 255, 255, 0.97);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 700px;
+    overflow: auto;
+    margin-bottom: 20px;
+`;
+
+const SectionCharts = styled.section`
+    background: rgba(255, 255, 255, 0.97);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    width: 700px;
     overflow: auto;
     margin-bottom: 20px;
 `;

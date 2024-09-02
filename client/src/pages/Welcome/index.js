@@ -6,40 +6,52 @@ const Welcome = () => {
     const navigate = useNavigate();
 
     return (
-        <Main>
-            <Overlay>
-                <Content>
-                    <Title>Welcome to MealMate</Title>
-                    <Subtitle>Your Ultimate Calorie Tracker</Subtitle>
-                    <Description>
-                        Track your daily calorie intake, manage your meals, and stay on top of your health goals. 
-                        With MealMate, you can easily add recipes, view your daily total calories, and get insightful 
-                        recommendations to help you make healthier choices.
-                    </Description>
-                    <Features>
-                        <Feature>
-                            <Icon>🍽️</Icon>
-                            <FeatureTitle>Easy Meal Tracking</FeatureTitle>
-                            <FeatureDescription>Quickly add your meals and track your daily calorie intake effortlessly.</FeatureDescription>
-                        </Feature>
-                        <Feature>
-                            <Icon>📊</Icon>
-                            <FeatureTitle>Personalized Dashboard</FeatureTitle>
-                            <FeatureDescription>View your calorie progress and get personalized health insights.</FeatureDescription>
-                        </Feature>
-                        <Feature>
-                            <Icon>🔥</Icon>
-                            <FeatureTitle>Goal-Oriented</FeatureTitle>
-                            <FeatureDescription>Set your health goals and let MealMate guide you to achieve them.</FeatureDescription>
-                        </Feature>
-                    </Features>
-                    <Buttons>
-                        <Button onClick={() => navigate('/signup')}>Start Today !</Button>
-                        <ButtonSecondary onClick={() => navigate('/login')}>Already Have an Account ? Log In</ButtonSecondary>
-                    </Buttons>
-                </Content>
-            </Overlay>
-        </Main>
+        <>
+            <Main>
+                <Overlay>
+                    <Content>
+                        <Title>Welcome to MealMate</Title>
+                        <Subtitle>Your Ultimate Calorie Tracker</Subtitle>
+                        <Description>
+                            Track your daily calorie intake, manage your meals, and stay on top of your health goals. 
+                            With MealMate, you can easily add recipes, view your daily total calories, and get insightful 
+                            recommendations to help you make healthier choices.
+                        </Description>
+                        <Features>
+                            <Feature>
+                                <Icon>🍽️</Icon>
+                                <FeatureTitle>Easy Meal Tracking</FeatureTitle>
+                                <FeatureDescription>Quickly add your meals and track your daily calorie intake effortlessly.</FeatureDescription>
+                            </Feature>
+                            <Feature>
+                                <Icon>📊</Icon>
+                                <FeatureTitle>Personalized Dashboard</FeatureTitle>
+                                <FeatureDescription>View your calorie progress and get personalized health insights.</FeatureDescription>
+                            </Feature>
+                            <Feature>
+                                <Icon>🔥</Icon>
+                                <FeatureTitle>Goal-Oriented</FeatureTitle>
+                                <FeatureDescription>Set your health goals and let MealMate guide you to achieve them.</FeatureDescription>
+                            </Feature>
+                        </Features>
+                        <Buttons>
+                            <Button onClick={() => navigate('/signup')}>Start Today !</Button>
+                            <ButtonSecondary onClick={() => navigate('/login')}>Already Have an Account ? Log In</ButtonSecondary>
+                        </Buttons>
+                    </Content>
+                </Overlay>
+            </Main>
+            <Footer>
+                <Credits>
+                    <p>
+                        <a href="https://www.flaticon.com/free-icons/logout" title="logout icons">Logout icons created by Gregor Cresnar - Flaticon</a>
+                    </p>
+                    <p>
+                        <a href="https://www.vecteezy.com/free-vector/healthy-food-background">Healthy Food Background Vectors by Vecteezy</a>
+                    </p>
+                </Credits>
+            </Footer>
+        </>
     );
 };
 
@@ -154,5 +166,26 @@ const ButtonSecondary = styled(Button)`
     &:hover {
         background-color: #93345a;
         transform: scale(1.05);
+    }
+`;
+
+const Footer = styled.footer`
+    background-color: white;
+    padding: 1rem;
+    text-align: center;
+    width: 100%;
+`;
+
+const Credits = styled.div`
+    font-size: 0.9rem;
+    color: black;
+    a {
+        color: black;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    a:hover {
+        color: #5fad56; 
     }
 `;

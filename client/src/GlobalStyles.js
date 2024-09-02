@@ -72,6 +72,30 @@ const GlobalStyles = createGlobalStyle`
     label {
         font-weight: bold;
     }
+
+    .meal-calories {
+        background: rgba(242, 193, 78, 0.95);
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .meal-fat {
+        background: rgba(247, 129, 84, 0.95);
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .meal-protein {
+        background: rgba(77, 144, 120, 0.95);
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .meal-carb {
+        background: rgba(180, 67, 108, 0.95);
+        padding: 10px;
+        border-radius: 12px;
+    }
 `;
 
 export default GlobalStyles;
