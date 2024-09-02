@@ -1,4 +1,4 @@
-import {React, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import GlobalStyles from './GlobalStyles';
 import Header from './Header';
@@ -12,6 +12,7 @@ import { useLoggedInUser } from './contexts/LoggedInUserContext';
 const PrivateRoute = ({ element }) => {
     const { loggedInUser } = useLoggedInUser();
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         if (token) {
@@ -20,14 +21,17 @@ const PrivateRoute = ({ element }) => {
             setIsAuthenticated(false);
         }
     }, [loggedInUser]);
+
     return !isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 const App = () => {
+    const { loggedInUser } = useLoggedInUser();
+
     return (
         <>
             <GlobalStyles />
-            <Header />
+            {loggedInUser && <Header />}
             <Routes>
                 <Route path="/" element={<Welcome />} />
                 <Route path="/signup" element={<Signup />} />

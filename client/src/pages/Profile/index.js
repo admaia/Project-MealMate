@@ -4,10 +4,9 @@ import { LoggedInUserContext } from '../../contexts/LoggedInUserContext';
 import styled from 'styled-components';
 
 const Profile = () => {
-    const { loggedInUser, logOut, logIn, updateUserProfile } = useContext(LoggedInUserContext);
+    const { loggedInUser, updateUserProfile } = useContext(LoggedInUserContext);
     const [userData, setUserData] = useState({
         name: '',
-        password: '',
     });
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
@@ -18,7 +17,7 @@ const Profile = () => {
             axios.get(`/profile/${loggedInUser._id}`)
                 .then(res => {
                     const { name } = res.data;
-                    setUserData({ name, password: '' });
+                    setUserData({ name });
                 })
                 .catch(error => {
                     console.error('Error fetching user data:', error);
@@ -31,20 +30,13 @@ const Profile = () => {
         try {
             const response = await axios.put('/profile/update', {
                 userId: loggedInUser._id,
-                ...userData,
+                name: userData.name,
             });
             setMessage('Profile updated successfully!');
             setError('');
-
-            logOut();
-            
-            const reLoggedInUser = await logIn({
-                username: loggedInUser.username,
-                password: loggedInUser.password,
-            });
-
-            updateUserProfile(reLoggedInUser);
+            updateUserProfile({ ...loggedInUser, name: userData.name });
         } catch (error) {
+            console.error('Error updating profile:', error);
             setError('Error updating profile.');
             setMessage('');
         }
@@ -61,6 +53,7 @@ const Profile = () => {
             setError('');
             setPassword('');
         } catch (error) {
+            console.error('Error changing password:', error);
             setError('Error changing password.');
             setMessage('');
         }
@@ -68,15 +61,14 @@ const Profile = () => {
 
     return (
         <ProfileWrapper>
-            <h1>Manage Your Profile</h1>
-            {message && <Message>{message}</Message>}
-            {error && <Error>{error}</Error>}
-            <ProfileSection>
-                <h2>Profile Information</h2>
-                <Form onSubmit={handleUpdateProfile}>
+            <FormSection>
+                <Title>Manage Your Profile</Title>
+                {message && <Message>{message}</Message>}
+                {error && <Error>{error}</Error>}
+                <ProfileForm onSubmit={handleUpdateProfile}>
                     <FormGroup>
-                        <label htmlFor="name">Name</label>
-                        <input
+                        <Label htmlFor="name">Name</Label>
+                        <Input
                             type="text"
                             id="name"
                             value={userData.name}
@@ -84,45 +76,63 @@ const Profile = () => {
                             required
                         />
                     </FormGroup>
-                    <button type="submit">Update Profile</button>
-                </Form>
-            </ProfileSection>
-            <ProfileSection>
-                <h2>Change Password</h2>
-                <Form onSubmit={handleChangePassword}>
+                    <Button type="submit">Update Profile</Button>
+                </ProfileForm>
+                <PasswordForm onSubmit={handleChangePassword}>
                     <FormGroup>
-                        <label htmlFor="password">New Password</label>
-                        <input
+                        <Label htmlFor="password">New Password</Label>
+                        <Input
                             type="password"
                             id="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            required
                         />
                     </FormGroup>
-                    <button type="submit">Change Password</button>
-                </Form>
-            </ProfileSection>
+                    <Button type="submit">Change Password</Button>
+                </PasswordForm>
+            </FormSection>
         </ProfileWrapper>
     );
 };
 
 export default Profile;
 
-const ProfileWrapper = styled.div`
+const ProfileWrapper = styled.main`
+    min-height: calc(100vh - 2.5rem);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 2rem;
-    max-width: 600px;
-    margin: auto;
+    margin-left: 15rem; 
 `;
 
-const ProfileSection = styled.section`
-    margin-bottom: 2rem;
-    padding: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+const FormSection = styled.div`
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 `;
 
-const Form = styled.form`
+const Title = styled.h1`
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #f2c14e;
+    font-weight: 700;
+    text-align: center;
+`;
+
+const ProfileForm = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+`;
+
+const PasswordForm = styled.form`
     display: flex;
     flex-direction: column;
     gap: 1rem;
@@ -134,12 +144,44 @@ const FormGroup = styled.div`
     gap: 0.5rem;
 `;
 
+const Label = styled.label`
+    font-size: 1rem;
+    color: #333;
+`;
+
+const Input = styled.input`
+    width: 95%; 
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+`;
+
+const Button = styled.button`
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #4D9078;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: background-color 0.3s, transform 0.2s;
+
+    &:hover {
+        background-color: #3c7460;
+        transform: scale(1.05);
+    }
+`;
+
 const Message = styled.div`
     color: green;
     margin-bottom: 1rem;
+    text-align: center;
 `;
 
 const Error = styled.div`
     color: red;
     margin-bottom: 1rem;
+    text-align: center;
 `;

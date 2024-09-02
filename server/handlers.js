@@ -306,6 +306,7 @@ const updateUserProfile = async (req, res) => {
     if (!userId || !name) {
         return res.status(400).json({ status: 400, message: 'User ID and name are required' });
     }
+
     const client = new MongoClient(MONGO_URI);
     try {
         await client.connect();
@@ -314,12 +315,40 @@ const updateUserProfile = async (req, res) => {
             { _id: userId },
             { $set: { name } }
         );
-        if (result.matchedCount === 0) {
+        if (result.acknowledged !== true) {
             return res.status(404).json({ status: 404, message: 'User not found' });
         }
         res.status(200).json({ message: 'Profile updated successfully' });
     } catch (error) {
         console.error('Error updating user profile:', error);
+        res.status(500).json({ status: 500, message: 'Internal server error' });
+    } finally {
+        await client.close();
+    }
+};
+
+const changePassword = async (req, res) => {
+    const { userId, newPassword } = req.body;
+    if (!userId || !newPassword) {
+        return res.status(400).json({ status: 400, message: 'User ID and new password are required' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10); 
+
+    const client = new MongoClient(MONGO_URI);
+    try {
+        await client.connect();
+        const db = client.db(DB);
+        const result = await db.collection(USER_COLLECTION).updateOne(
+            { _id: userId },
+            { $set: { password: hashedPassword } }
+        );
+        if (result.acknowledged !== true) {
+            return res.status(404).json({ status: 404, message: 'User not found' });
+        }
+        res.status(200).json({ message: 'Password changed successfully' });
+    } catch (error) {
+        console.error('Error changing password:', error);
         res.status(500).json({ status: 500, message: 'Internal server error' });
     } finally {
         await client.close();
@@ -362,5 +391,6 @@ module.exports = {
     deleteMeal,
     getUserProfile,
     updateUserProfile,
+    changePassword,
     getMealsByRange
 };

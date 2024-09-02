@@ -18,7 +18,6 @@ const Login = () => {
         try {
             const user = await logIn({ email, password });
             if (user && user.name) {
-                console.log(`/dashboard/${user.name}`)
                 navigate(`/dashboard/${user.name}`);
             } else {
                 setError('Invalid user data');
@@ -33,6 +32,7 @@ const Login = () => {
     return (
         <Main>
             <Form onSubmit={handleSubmit}>
+                <Title>Log In</Title>
                 <Label htmlFor="email">Email</Label>
                 <Input
                     id="email"
@@ -62,44 +62,59 @@ export default Login;
 
 const Main = styled.main`
     min-height: calc(100vh - 2.5rem);
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
 `;
 
 const Form = styled.form`
-    background: rgba(255, 255, 255, 0.8);
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
+`;
+
+const Title = styled.h1`
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #f2c14e;
+    font-weight: 700;
+    text-align: center;
 `;
 
 const Label = styled.label`
     display: block;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
 `;
 
 const Input = styled.input`
     width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 0.75rem;
+    margin-bottom: 1.5rem;
     border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
 `;
 
 const Button = styled.button`
     width: 100%;
-    padding: 0.5rem;
-    background-color: orangered;
-    color: white;
+    padding: 0.75rem;
+    background-color: #4D9078;
+    color: #fff;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    transition: background-color 0.3s, transform 0.2s;
+
     &:hover {
-        background-color: orange;
+        background-color: #3c7460;
+        transform: scale(1.05);
     }
+
     &:disabled {
         background-color: #a0a0a0;
         cursor: not-allowed;
@@ -109,4 +124,5 @@ const Button = styled.button`
 const Error = styled.p`
     color: red;
     margin-top: 1rem;
+    text-align: center;
 `;
