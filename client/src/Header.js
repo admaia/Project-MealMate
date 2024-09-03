@@ -57,6 +57,21 @@ const Wrapper = styled.nav`
   padding: 20px;
   position: fixed;
   align-items: center;
+  transition: width 0.3s ease;
+
+  @media (max-width: 768px) {
+    width: 150px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    flex-wrap: nowrap; 
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 10px; 
+  }
 `;
 
 const TopSection = styled.div`
@@ -64,6 +79,14 @@ const TopSection = styled.div`
   flex-direction: column;
   align-items: center;
   margin-bottom: auto; 
+
+  @media (max-width: 480px) {
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: space-between; 
+    width: 100%;
+    margin: 0; 
+  }
 `;
 
 const BottomSection = styled.div`
@@ -72,6 +95,14 @@ const BottomSection = styled.div`
   align-items: center;
   margin-top: auto; 
   margin-bottom: 20px; 
+
+  @media (max-width: 480px) {
+    flex-direction: row; 
+    align-items: center; 
+    justify-content: space-between; 
+    width: 100%; 
+    margin: 0; 
+  }
 `;
 
 const Brand = styled.h1`
@@ -80,6 +111,16 @@ const Brand = styled.h1`
   color: white;
   margin-bottom: 3rem; 
   text-align: center;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1rem;
+    margin: 0; 
+  }
 `;
 
 const NavItem = styled(NavLink)`
@@ -101,6 +142,15 @@ const NavItem = styled(NavLink)`
   &:hover {
     color: white;
   }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem; 
+    margin: 0 0.5rem;
+  }
 `;
 
 const ProfileLink = styled.div`
@@ -121,6 +171,15 @@ const ProfileLink = styled.div`
 
   &:hover {
     color: white; 
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem; 
+    margin: 0 0.5rem;
   }
 `;
 
@@ -144,5 +203,14 @@ const LogOutButton = styled.button`
 
   &:hover {
     color: white
+  }
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
+    margin: 0 0.5rem; 
   }
 `;

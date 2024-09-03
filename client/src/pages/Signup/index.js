@@ -84,15 +84,24 @@ const Main = styled.main`
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 1rem;
+    
+    @media (max-width: 768px) {
+        padding: 0.5rem;
+    }
 `;
 
 const Form = styled.form`
-    background: rgba(255, 255, 255, 0.95); /* Slightly less transparent */
+    background: rgba(255, 255, 255, 0.95);
     padding: 2.5rem;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
     max-width: 400px;
     width: 100%;
+    
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+    }
 `;
 
 const Title = styled.h1`
@@ -101,6 +110,11 @@ const Title = styled.h1`
     color: #f2c14e;
     font-weight: 700;
     text-align: center;
+    
+    @media (max-width: 768px) {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
 `;
 
 const Label = styled.label`
@@ -110,12 +124,17 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-    width: 100%;
+    width: 90%;
     padding: 0.75rem;
     margin-bottom: 1.5rem;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
+    
+    @media (max-width: 768px) {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
 `;
 
 const Button = styled.button`
@@ -137,6 +156,11 @@ const Button = styled.button`
     &:disabled {
         background-color: #a0a0a0;
         cursor: not-allowed;
+    }
+    
+    @media (max-width: 768px) {
+        font-size: 1rem;
+        padding: 0.5rem;
     }
 `;
 

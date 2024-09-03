@@ -66,6 +66,10 @@ const Main = styled.main`
     justify-content: center;
     align-items: center;
     color: #fff;
+
+    @media (max-width: 768px) {
+        background-size: contain;
+    }
 `;
 
 const Overlay = styled.div`
@@ -74,6 +78,10 @@ const Overlay = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+
+    @media (max-width: 768px) {
+        padding: 2rem;
+    }
 `;
 
 const Content = styled.div`
@@ -83,33 +91,58 @@ const Content = styled.div`
     border-radius: 12px;
     text-align: center;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+    @media (max-width: 768px) {
+        padding: 2rem;
+        max-width: 100%;
+    }
 `;
 
 const Title = styled.h1`
     font-size: 3.5rem;
     margin-bottom: 1.5rem;
     color: #f2c14e;
-    font-weight: 700; 
+    font-weight: 700;
+
+    @media (max-width: 768px) {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
 `;
 
 const Subtitle = styled.h2`
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
     color: #F78154;
-    font-weight: 500; 
+    font-weight: 500;
+
+    @media (max-width: 768px) {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
 `;
 
 const Description = styled.p`
     font-size: 1.2rem;
     margin-bottom: 2.5rem;
     color: black;
-    font-weight: 400; 
+    font-weight: 400;
+
+    @media (max-width: 768px) {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
 `;
 
 const Features = styled.div`
     display: flex;
     justify-content: space-between;
     margin-bottom: 3rem;
+
+    @media (max-width: 768px) {
+        flex-direction: column;
+        align-items: center;
+    }
 `;
 
 const Feature = styled.div`
@@ -117,6 +150,11 @@ const Feature = styled.div`
     flex-direction: column;
     align-items: center;
     max-width: 150px;
+    margin: 0 1rem;
+
+    @media (max-width: 768px) {
+        margin: 1rem 0;
+    }
 `;
 
 const Icon = styled.div`
@@ -129,34 +167,52 @@ const FeatureTitle = styled.h3`
     font-size: 1.4rem;
     margin-bottom: 0.75rem;
     color: #f2c14e;
-    font-weight: 600; 
+    font-weight: 600;
+
+    @media (max-width: 768px) {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
 `;
 
 const FeatureDescription = styled.p`
     font-size: 1rem;
     text-align: center;
     color: black;
+
+    @media (max-width: 768px) {
+        font-size: 0.9rem;
+    }
 `;
 
 const Buttons = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; 
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+        gap: 1rem;
+    }
 `;
 
 const Button = styled.button`
-    padding: 1rem 2.5rem; 
-    font-size: 1.2rem; 
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
     color: #fff;
     background-color: #4D9078;
     border: none;
-    border-radius: 8px; 
+    border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 
     &:hover {
         background-color: #3c7460;
-        transform: scale(1.05); 
+        transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
     }
 `;
 

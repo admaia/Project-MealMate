@@ -103,7 +103,20 @@ const ProfileWrapper = styled.main`
     justify-content: center;
     align-items: center;
     padding: 2rem;
-    margin-left: 15rem; 
+    margin-left: 200px; 
+    width: calc(100% - 200px); 
+    
+    @media (max-width: 768px) {
+        margin-left: 200px; 
+        width: calc(100% - 250px);
+        padding: 1rem;
+    }
+
+    @media (max-width: 480px) {
+        margin-left: 0;
+        width: 95%;
+        padding: 0.5rem;
+    }
 `;
 
 const FormSection = styled.div`
@@ -116,6 +129,14 @@ const FormSection = styled.div`
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    
+    @media (max-width: 768px) {
+        padding: 1.5rem;
+    }
+
+    @media (max-width: 480px) {
+        padding: 1rem;
+    }
 `;
 
 const Title = styled.h1`
@@ -124,6 +145,16 @@ const Title = styled.h1`
     color: #f2c14e;
     font-weight: 700;
     text-align: center;
+    
+    @media (max-width: 768px) {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+    }
 `;
 
 const ProfileForm = styled.form`
@@ -150,11 +181,21 @@ const Label = styled.label`
 `;
 
 const Input = styled.input`
-    width: 95%; 
+    width: 92%;
     padding: 0.75rem;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 1rem;
+    
+    @media (max-width: 768px) {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 480px) {
+        padding: 0.4rem;
+        font-size: 0.8rem;
+    }
 `;
 
 const Button = styled.button`
@@ -171,6 +212,16 @@ const Button = styled.button`
     &:hover {
         background-color: #3c7460;
         transform: scale(1.05);
+    }
+    
+    @media (max-width: 768px) {
+        font-size: 1rem;
+        padding: 0.5rem;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 0.9rem;
+        padding: 0.4rem;
     }
 `;
 

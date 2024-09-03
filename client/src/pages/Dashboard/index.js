@@ -263,7 +263,17 @@ const DashboardWrapper = styled.div`
     display: flex;
     flex-direction: column;
     height: 100vh;
-    margin-left: 250px; 
+    margin-left: 250px;
+    transition: margin-left 0.3s ease; 
+
+    @media (max-width: 768px) {
+        margin-left: 180px; 
+    }
+
+    @media (max-width: 480px) {
+        margin-left: 0;
+        padding: 1rem;
+    }
 `;
 
 const SummarySection = styled.div`
@@ -272,7 +282,16 @@ const SummarySection = styled.div`
     flex-wrap: wrap;
     gap: 2rem; 
     margin-top: 5px;
-    margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+        gap: 0.5rem; 
+        flex-wrap: wrap; 
+    }
+
+    @media (max-width: 480px) {
+        gap: 0.5rem; 
+        flex-wrap: wrap; 
+    }
 `;
 
 const MacroItemCal = styled.div`
@@ -280,57 +299,57 @@ const MacroItemCal = styled.div`
     padding: 2.5rem;
     border-radius: 12px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 150px;
+    flex: 1 1 150px;
     display: flex;
     flex-direction: column;
-    align-items: center; 
+    align-items: center;
+
+    @media (max-width: 768px) {
+        font-size: 1.2rem;
+        padding: 0.75rem; 
+    }
+
+    @media (max-width: 480px) {
+        font-size: 0.8rem;
+        padding: 0.75rem; 
+    }
 `;
 
-const MacroItemFat = styled.div`
+const MacroItemFat = styled(MacroItemCal)`
     background: rgba(247, 129, 84, 0.95);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
 `;
 
-const MacroItemPro = styled.div`
+const MacroItemPro = styled(MacroItemCal)`
     background: rgba(77, 144, 120, 0.95);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
 `;
 
-const MacroItemCarb = styled.div`
+const MacroItemCarb = styled(MacroItemCal)`
     background: rgba(180, 67, 108, 0.95);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 150px;
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
 `;
 
 const MainContentWrapper = styled.div`
     display: flex;
     flex: 1;
-    gap: 2rem;
-    margin-top: 2rem;
+    gap: 7rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    transition: width 0.3s ease; 
+
+    @media (max-width: 768px) {
+        width: calc(100% - 80px);
+        gap: 0.5rem;
+    }
+    @media (max-width: 480px) {
+        width: calc(100% - 25px);
+        gap: 0.5rem;
+    }
 `;
 
 const ContentWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    flex: 2;
+    flex: 1;
+    width: 100%; 
 `;
 
 const Section = styled.section`
@@ -341,32 +360,45 @@ const Section = styled.section`
     flex: 1;
     overflow: auto;
     margin-bottom: 20px;
-    width: 800px; 
-    max-height: 840px;
+    width: 100%;
+    max-width: 100%;
+    max-height: 900px;
+
+    @media (max-width: 768px) {
+        font-size: 1.2rem;
+        max-width: 100%; 
+        max-height: 350px;
+    }
+    @media (max-width: 480px) {
+        font-size: 1rem;
+        padding: 0.75rem; 
+        max-height: 250px;
+    }
 `;
 
-const SectionMeals = styled.section`
-    background: rgba(255, 255, 255, 0.97);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 700px;
-    overflow: auto;
-    margin-bottom: 20px;
+const SectionMeals = styled(Section)`
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    max-height: 400px;
 `;
 
-const SectionCharts = styled.section`
-    background: rgba(255, 255, 255, 0.97);
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-    width: 700px;
-    overflow: auto;
-    margin-bottom: 20px;
+const SectionCharts = styled(Section)`
+    max-height: 400px;
 `;
 
 const SearchBar = styled.div`
     margin-bottom: 1rem;
+
+    @media (max-width: 768px) {
+            font-size: 1rem; 
+            padding: 0.4rem; 
+    }
+    @media (max-width: 480px) {
+            font-size: 0.8rem; 
+            padding: 0.4rem; 
+    }
 `;
 
 const DateSelector = styled.div`
@@ -384,6 +416,27 @@ const DateSelector = styled.div`
         font-size: 1.25rem;
         margin: 0 1rem;
     }
+
+    @media (max-width: 768px) {
+        button {
+            font-size: 1.5rem; 
+            padding: 0 0.25rem; 
+        }
+        span {
+            font-size: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        padding-top: 3rem;
+        button {
+            font-size: 1rem; 
+            padding: 0 0.25rem; 
+        }
+        span {
+            font-size: 0.9rem;
+        }
+    }
 `;
 
 const MealsList = styled.ul`
@@ -393,6 +446,12 @@ const MealsList = styled.ul`
     display: flex;
     flex-direction: column;
     gap: 1rem; 
+    overflow-y: auto;
+    max-height: calc(100% - 60px);
+
+    @media (max-width: 480px) {
+        max-height: calc(100% - 20px);
+    }
 `;
 
 const MealItem = styled.li`
@@ -401,25 +460,37 @@ const MealItem = styled.li`
     padding: 1rem;
     border-radius: 12px;
     display: flex;
-    justify-content: space-between; 
+    flex-direction: row; 
+    justify-content: space-between;
     align-items: center;
+    gap: 0.5rem; 
     width: 100%;
     box-sizing: border-box; 
     font-size: 1rem; 
-    max-height: 80px; 
     
     h4 {
-        margin-right: auto;
+        margin: 0;
+        font-size: 1.1rem; 
     }
 
     p {
-        margin: 0 1rem; 
+        margin: 0;
     }
 
-    button {
-        margin-left: auto;
+    @media (max-width: 768px) {
+        max-height: 150px;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    @media (max-width: 480px) {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
     }
 `;
+
 
 const ChartContainer = styled.div`
     display: flex;
@@ -429,4 +500,6 @@ const ChartContainer = styled.div`
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 100%;
 `;

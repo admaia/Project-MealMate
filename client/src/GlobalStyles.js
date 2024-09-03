@@ -24,7 +24,7 @@ const GlobalStyles = createGlobalStyle`
         background-size: cover; 
         background-position: center; 
         background-attachment: fixed; 
-        opacity: 0.7;
+        opacity: 0.5;
         z-index: -1;
     }
 
@@ -50,7 +50,6 @@ const GlobalStyles = createGlobalStyle`
         margin: 0;
         outline: none;
         padding: 10px 16px;
-        position: relative;
         text-align: center;
         text-decoration: none;
         transition: color 100ms;
@@ -77,24 +76,28 @@ const GlobalStyles = createGlobalStyle`
         background: rgba(242, 193, 78, 0.95);
         padding: 10px;
         border-radius: 12px;
+        width: 55px;
     }
 
     .meal-fat {
         background: rgba(247, 129, 84, 0.95);
         padding: 10px;
         border-radius: 12px;
+        width: 55px;
     }
 
     .meal-protein {
         background: rgba(77, 144, 120, 0.95);
         padding: 10px;
         border-radius: 12px;
+        width: 55px;
     }
 
     .meal-carb {
         background: rgba(180, 67, 108, 0.95);
         padding: 10px;
         border-radius: 12px;
+        width: 55px;
     }
 `;
 
