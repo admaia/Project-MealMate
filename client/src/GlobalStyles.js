@@ -77,6 +77,9 @@ const GlobalStyles = createGlobalStyle`
         padding: 10px;
         border-radius: 12px;
         width: 55px;
+        @media (max-width: 480px) {
+            width: 50px
+    }
     }
 
     .meal-fat {
@@ -84,6 +87,9 @@ const GlobalStyles = createGlobalStyle`
         padding: 10px;
         border-radius: 12px;
         width: 55px;
+        @media (max-width: 480px) {
+            width: 40px
+    }
     }
 
     .meal-protein {
@@ -91,6 +97,9 @@ const GlobalStyles = createGlobalStyle`
         padding: 10px;
         border-radius: 12px;
         width: 55px;
+        @media (max-width: 480px) {
+            width: 40px
+    }
     }
 
     .meal-carb {
@@ -98,6 +107,9 @@ const GlobalStyles = createGlobalStyle`
         padding: 10px;
         border-radius: 12px;
         width: 55px;
+        @media (max-width: 480px) {
+            width: 40px
+    }
     }
 `;
 

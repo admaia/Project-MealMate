@@ -243,10 +243,10 @@ const Dashboard = () => {
                             <div>No results found</div>
                         ) : (
                             searchResults.map(recipe => (
-                                <MealItem key={recipe.recipe_id}>
+                                <MealItemSearch key={recipe.recipe_id}>
                                     <h4>{recipe.recipe_name}</h4>
                                     <button className='meal-button' onClick={() => addMealToDashboard(recipe)}>+</button>
-                                </MealItem>
+                                </MealItemSearch>
                             ))
                         )}
                     </MealsList>
@@ -459,6 +459,33 @@ const MealItem = styled.li`
     border: solid 2px #f2f2f2;
     padding: 1rem;
     border-radius: 12px;
+    display: grid;
+    grid-template-columns: 0.75fr 0.5fr 0.5fr 0.5fr 0.5fr 0fr;
+    align-items: center;
+    gap: 0.5rem; 
+    width: 100%;
+    box-sizing: border-box; 
+    font-size: 1rem; 
+    h4, p, .meal-button {
+        margin: 0;
+    }
+    @media (max-width: 768px) {
+        max-height: 150px;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+    @media (max-width: 480px) {
+        display: flex;
+        align-items: center;
+        font-size: 0.85rem; 
+    }
+`;
+
+const MealItemSearch = styled.li`
+    background: #f2f2f2;
+    border: solid 2px #f2f2f2;
+    padding: 1rem;
+    border-radius: 12px;
     display: flex;
     flex-direction: row; 
     justify-content: space-between;
@@ -490,7 +517,6 @@ const MealItem = styled.li`
         gap: 0.5rem;
     }
 `;
-
 
 const ChartContainer = styled.div`
     display: flex;
